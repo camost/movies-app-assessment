@@ -1,0 +1,63 @@
+{% extends 'base.html' %} {% load static i18n %} {% block title %}{% trans 'Movies' %}{% endblock %} {% block content %}
+<h3>{% trans 'Movies' %}</h3>
+<table class="table table-striped">
+  <thead>
+        <form method="GET" action="{% url 'movie:search' %}" >
+            <input type="search" name="search">
+            <button  type="submit"> Search </button>
+        </form>
+
+        <tr>
+      <!-- TODO: Add table columns -->
+      <th><b>ID</b></th>
+      <th><b>Title</b></th>
+      <th><b>Year</b></th>
+      <th><b>Rated</b></th>
+      <th><b>Released</b></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% if all_results|length == 0 %}
+    {% for movie in movie_list %}
+    <tr>
+      <td>
+          <a href="{{ movie.get_absolute_url }}">{{ movie.pk }}</a>
+      </td>
+      <td><a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a></td>
+      <td>{{ movie.year }}</td>
+      <td>{{ movie.rated }}</td>
+      <td>{{ movie.released_on }}</td>
+      <!-- TODO: Render more movie properties and make sure action links work -->
+      <td><a href="{% url 'movie:update' movie.pk %}">Edit</a></td>
+      <td><a href="{% url 'movie:delete' movie.pk %}">Delete</a></td>
+    </tr>
+    {% empty %}
+      <h2>No results found</h2>
+    {% endfor %}
+
+  {% else %}
+    {% for movie in all_results %}
+    <tr>
+      <td>
+        {{ movie.pk }}
+      </td>
+      <td><a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a></td>
+      <td>{{ movie.year }}</td>
+      <td>{{ movie.rated }}</td>
+      <td>{{ movie.released_on }}</td>
+      <!-- TODO: Render more movie properties and make sure action links work -->
+      <td><a href="{% url 'movie:update' movie.pk %}">Edit</a></td>
+      <td><a href="{% url 'movie:delete' movie.pk %}">Delete</a></td>
+    </tr>
+
+    {% endfor %}
+
+  {% endif %}
+
+
+    <tr>
+      <td colspan="6"><a href="{% url 'movie:create' %}">Add new movie</a></td>
+    </tr>
+  </tbody>
+</table>
+{% endblock content %}
